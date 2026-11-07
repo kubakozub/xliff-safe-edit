@@ -1,0 +1,46 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  unittest:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+        os: [ubuntu-latest]
+        include:
+          # 3.9 is past end of life and setup-python can no longer provision it
+          # on ubuntu-latest. The code still supports it, so the claim is tested
+          # on the last image that ships the interpreter.
+          - python-version: '3.9'
+            os: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # The engine tests and the HTTP tests both run here: the server is started
+      # in process on an ephemeral port, bound to 127.0.0.1 and nothing else.
+      - run: python -m unittest discover -s tests -v
+
+      - name: The command line entry point starts and stops
+        run: |
+          python - <<'PY'
+          import os, tempfile, threading
+          from xliffedit import server
+          server.DATA = os.path.join(tempfile.mkdtemp(), "data")
+          httpd = server.make_server("127.0.0.1", 0)
+          thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+          thread.start()
+          print("bound on", httpd.server_address)
+          httpd.shutdown()
+          httpd.server_close()
+          thread.join(timeout=10)
+          print("stopped cleanly")
+          PY

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XLIFF editor</title>
+<link rel="stylesheet" href="/ui.css">
+</head>
+<body>
+<header>
+  <h1>XLIFF editor</h1>
+  <select id="files"></select>
+  <button id="up">Open .xlz or .xlf</button>
+  <input type="file" id="file" class="hidden" accept=".xlz,.xlf,.xliff">
+  <button id="gloss">Glossary</button>
+  <input type="file" id="glossfile" class="hidden" accept=".csv,.tsv,.txt,.docx">
+  <span class="grow"></span>
+  <select id="filter">
+    <option value="translatable">translatable</option>
+    <option value="all">all segments</option>
+    <option value="untranslated">untranslated</option>
+    <option value="edited">edited</option>
+  </select>
+  <input type="search" id="q" placeholder="search source and target" size="24">
+  <button id="qa">Quality checks</button>
+  <button id="dl" class="primary">Download file</button>
+</header>
+<div id="banner"></div>
+<main>
+  <div id="grid"><div id="drop">Drop a <b>.xlz</b> or <b>.xlf</b> here, or use <b>Open</b>.</div></div>
+  <aside>
+    <div id="stats" class="muted">No file loaded.</div>
+    <h2>Keys</h2>
+    <div class="muted" style="font-size:13px">
+      <div class="row"><kbd>Ctrl</kbd>+<kbd>Enter</kbd> save the segment and move on</div>
+      <div class="row"><kbd>Alt</kbd>+<kbd>&darr;</kbd> / <kbd>Alt</kbd>+<kbd>&uarr;</kbd> next / previous</div>
+      <div class="row"><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd> copy source into target</div>
+      <div class="row"><kbd>Ctrl</kbd>+<kbd>1..9</kbd> insert tag number N</div>
+      <div class="row">Tags cannot be split: they are inserted and deleted whole.</div>
+    </div>
+    <h2>Replace</h2>
+    <div class="row"><input type="text" id="rf" placeholder="find" class="grow"></div>
+    <div class="row"><input type="text" id="rr" placeholder="replace with" class="grow"></div>
+    <div class="row">
+      <label><input type="checkbox" id="rc"> Aa</label>
+      <label><input type="checkbox" id="rw"> whole words</label>
+      <button id="rprev">Preview</button><button id="rgo">Replace</button>
+    </div>
+    <div id="rout" class="muted" style="font-size:12px"></div>
+    <h2 id="issuesH">Quality checks</h2>
+    <div id="issues" class="muted">Press <b>Quality checks</b>.</div>
+  </aside>
+</main>
+<script src="/ui.js"></script>
+</body>
+</html>
